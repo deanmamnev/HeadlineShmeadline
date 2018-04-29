@@ -1,17 +1,15 @@
 // We'll be rewriting the table's data frequently, so let's make our code more DRY
 // by writing a function that takes in 'animals' (JSON) and creates a table body
-function displayResults(animals) {
+function displayResults(newScrapedData) {
   // First, empty the table
   $("tbody").empty();
+  console.log(newScrapedData);
 
   // Then, for each entry of that json...
-  animals.forEach(function(animal) {
+  newScrapedData.forEach(function(headline) {
+    console.log(headline);
     // Append each of the animal's properties to the table
-    $("tbody").append("<tr><td>" + animal.name + "</td>" +
-                         "<td>" + animal.numLegs + "</td>" +
-                         "<td>" + animal.class + "</td>" +
-                         "<td>" + animal.weight + "</td>" +
-                         "<td>" + animal.whatIWouldReallyCallIt + "</td></tr>");
+    $("tbody").append("<tr><td>" + headline.title + "</td></tr>");
   });
 }
 
@@ -28,7 +26,7 @@ function setActive(selector) {
 // First thing: ask the back end for json with all animals
 $.getJSON("/all", function(data) {
   // Call our function to generate a table body
-  displayResults(data);
+  // displayResults(data);
 });
 
 // 2: Button Interactions
@@ -48,6 +46,7 @@ $("#weight-sort").on("click", function() {
 
 // When user clicks the name sort button, display the table sorted by name
 $("#name-sort").on("click", function() {
+  console.log("Button works!")
   // Set new column as currently-sorted (active)
   setActive("#animal-name");
 

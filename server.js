@@ -7,6 +7,7 @@ var cheerio = require("cheerio");
 
 // Initialize Express
 var app = express();
+app.use(express.static("public"));
 
 // Database configuration
 var databaseUrl = "scraper";
@@ -20,7 +21,7 @@ db.on("error", function(error) {
 
 // Main route (simple Hello World Message)
 app.get("/", function(req, res) {
-  res.send("Hello world");
+  res.send("Alex Jones says hello ...or something");
 });
 
 // Retrieve data from the db
@@ -37,6 +38,21 @@ app.get("/all", function(req, res) {
     }
   });
 });
+
+app.get("/name", function(req, res) {
+  // Find all results from the scrapedData collection in the db
+  db.newScrapedData.find().sort({ title: 1 }, function(error, found)  {
+    // Throw any errors to the console
+    if (error) {
+      console.log(error);
+    }
+    // If there are no errors, send the data to the browser as json
+    else {
+      res.json(found);
+    }
+  });
+});
+
 
 // Scrape data from one site and place it into the mongodb db
 app.get("/scrape", function(req, res) {
@@ -77,6 +93,6 @@ app.get("/scrape", function(req, res) {
 
 
 // Listen on port 3000
-app.listen(3000, function() {
-  console.log("App running on port 3000!");
+app.listen(8080, function() {
+  console.log("App running on port 8080!");
 });
