@@ -1,15 +1,24 @@
 // We'll be rewriting the table's data frequently, so let's make our code more DRY
 // by writing a function that takes in 'animals' (JSON) and creates a table body
-function displayResults(newScrapedData) {
+function displayResults(bbcData) {
   // First, empty the table
   $("tbody").empty();
-  console.log(newScrapedData);
+  console.log(bbcData);
 
   // Then, for each entry of that json...
-  newScrapedData.forEach(function(headline) {
+  bbcData.forEach(function(headline) {
     console.log(headline);
     // Append each of the animal's properties to the table
-    $("tbody").append("<tr><td>" + headline.title + "</td></tr>");
+    $("tbody").append("<tr><td>" + headline.title + "</td><td>" + headline.summary + "</td><td>"+ "http://www.bbc.com" + headline.link + "</td></tr>");  
+  //User Note inputs here
+  $("tbody").append("<tr><td><textarea id='bodyinput' name='body'></textarea></td></tr>"); 
+  
+  $("tbody").append("<tr><td><button data-id='" + headline._id + "' id='savenote'>Save Note</button></td></tr>"); 
+
+
+    // add photos later
+ 
+
   });
 }
 

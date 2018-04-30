@@ -11,7 +11,7 @@ app.use(express.static("public"));
 
 // Database configuration
 var databaseUrl = "scraper";
-var collections = ["newScrapedData"];
+var collections = ["bbcData"];
 
 // Hook mongojs configuration to the db variable
 var db = mongojs(databaseUrl, collections);
@@ -27,7 +27,7 @@ app.get("/", function(req, res) {
 // Retrieve data from the db
 app.get("/all", function(req, res) {
   // Find all results from the scrapedData collection in the db
-  db.newScrapedData.find({}, function(error, found) {
+  db.bbcData.find({}, function(error, found) {
     // Throw any errors to the console
     if (error) {
       console.log(error);
@@ -41,7 +41,7 @@ app.get("/all", function(req, res) {
 
 app.get("/name", function(req, res) {
   // Find all results from the scrapedData collection in the db
-  db.newScrapedData.find().sort({ title: 1 }, function(error, found)  {
+  db.bbcData.find().sort({ title: 1 }, function(error, found)  {
     // Throw any errors to the console
     if (error) {
       console.log(error);
@@ -57,21 +57,24 @@ app.get("/name", function(req, res) {
 // Scrape data from one site and place it into the mongodb db
 app.get("/scrape", function(req, res) {
   // Make a request for the news section of `ycombinator`
-  request("https://www.infowars.com/", function(error, response, html) {
+  request("https://www.bbc.com/", function(error, response, html) {
     // Load the html body from request into cheerio
     var $ = cheerio.load(html);
     // For each element with a "title" class
-    $("h3").each(function(i, element) {
+    $(".media__content").each(function(i, element) {
       // Save the text and href of each link enclosed in the current element
-      var title = $(element).children("a").text();
-      var link = $(element).children("a").attr("href");
+      var title = $(element).children("h3").children("a").text();
+      var link = $(element).children("h3").children("a").attr("href");
+      var summary = $(element).children("p").text();
+
 
       // If this found element had both a title and a link
       if (title && link) {
-        // Insert the data in the scrapedData db
-        db.newScrapedData.insert({
+        // Insert the data in the bbcData db
+        db.bbcData.insert({
           title: title,
-          link: link
+          link: link,
+          summary: summary
         },
         function(err, inserted) {
           if (err) {
@@ -85,6 +88,8 @@ app.get("/scrape", function(req, res) {
         });
       }
     });
+
+  
   });
 
   // Send a "Scrape Complete" message to the browser
