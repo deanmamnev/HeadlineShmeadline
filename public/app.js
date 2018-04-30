@@ -7,9 +7,24 @@ function displayResults(bbcData) {
 
   // Then, for each entry of that json...
   bbcData.forEach(function(headline) {
-    console.log(headline);
+    console.log(headline);    
+    
+    headline.link2 = ""
+    var link= ""
+    if (headline.link.startsWith("http://www.bbc.com")){
+      link = headline.link;
+    }
+    else if (headline.link.startsWith("http://www.bbcamerica.com")){
+      link = headline.link;
+    }
+    else{
+      link = "http://www.bbc.com" + headline.link;
+    }
+   
     // Append each of the animal's properties to the table
-    $("tbody").append("<tr><td>" + headline.title + "</td><td>" + headline.summary + "</td><td>"+ "http://www.bbc.com" + headline.link + "</td></tr>");  
+    $("tbody").append("<tr><td>" + headline.title + "</td><td>" + headline.summary + "</td><td>"+ link + "</td></tr>");  
+
+
   //User Note inputs here
   $("tbody").append("<tr><td><textarea id='bodyinput' name='body'></textarea></td></tr>"); 
   
